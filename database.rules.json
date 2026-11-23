@@ -1,0 +1,31 @@
+{
+  "rules": {
+    "pairs": {
+      "$w": {
+        ".read": "auth != null && auth.uid === $w",
+        ".write": "auth != null && auth.uid === $w",
+        "phone": {
+          ".write": "auth != null && newData.val() === auth.uid && root.child('pairs').child($w).child('nonce').exists() && root.child('users').child(auth.uid).child('webs').child($w).child('nonce').val() === root.child('pairs').child($w).child('nonce').val()"
+        }
+      }
+    },
+    "users": {
+      "$p": {
+        ".read": "auth != null && auth.uid === $p",
+        ".write": "auth != null && auth.uid === $p",
+        "webs": {
+          "$w": {
+            ".read": "auth != null && auth.uid === $w",
+            ".write": "auth != null && auth.uid === $w && !newData.exists()"
+          }
+        }
+      }
+    },
+    "sessions": {
+      "$p": {
+        ".read": "auth != null && (auth.uid === $p || root.child('users').child($p).child('webs').child(auth.uid).exists())",
+        ".write": "auth != null && (auth.uid === $p || root.child('users').child($p).child('webs').child(auth.uid).exists())"
+      }
+    }
+  }
+}
